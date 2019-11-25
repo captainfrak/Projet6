@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use Exception;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,12 +17,24 @@ class RegistrationController extends AbstractController
 {
     /**
      * @Route("/register", name="app_register")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param Swift_Mailer $mailer
+     * @return Response
+     * @throws Exception
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, Swift_Mailer $mailer): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
+
+        $random = random_bytes(10);
+        $token = md5($random);
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
@@ -31,6 +44,7 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setToken($token);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -41,7 +55,7 @@ class RegistrationController extends AbstractController
                 ->setFrom('hello@example.com')
                 ->setTo('you@example.com')
                 ->setSubject('Confirmation d\'inscription')
-                ->setBody('en attendant de faire une vue');
+                ->setBody($this->renderView('email/email.html.twig', ['token' => $token]));
 
             $mailer->send($email);
 
@@ -50,6 +64,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'user' => null
         ]);
     }
 }
