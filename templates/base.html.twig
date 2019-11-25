@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
+            <link rel="stylesheet" href="/public/css/style.css">
             <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
         {% endblock %}
     </head>
@@ -23,26 +24,26 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/tricks">Tricks</a>
                         </li>
-
+                        {% if user %}
                         <li class="nav-item">
                             <a class="nav-link" href="/logout">déconnexion</a>
                         </li>
-
+                        {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="/login">connexion</a>
                         </li>
-
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
         {% endblock %}
-        <div class="container">
+        <div class="container-fluid">
             {% block body %}
             {% endblock %}
         </div>
         {% block footer %}
             <div class="row justify-content-center">
-                2019 FrakDev
+                2019 | FrakDev
             </div>
         {% endblock %}
         {% block javascripts %}{% endblock %}
