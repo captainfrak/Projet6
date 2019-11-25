@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Snow Tricks{% endblock %}
+
+{% block body %}
+<style>
+    .section {
+        height: 80vh;
+
+        z-index: 2;
+    }
+    #test-center {
+        margin-top: 25%;
+    }
+    #main-pic {
+        background-image: url("{{ asset('../../img/main/main-bg.jpg') }}");
+    }
+</style>
+
+<div class="section" id="main-pic">
+    <div class="row">
+        <div class="col text-center" id="test-center">
+            <h1>Snow Tricks</h1>
+            <span>Votre site sur le snowboard</span>
+        </div>
+    </div>
+</div>
+    <div class="section">
+        <p class="text-center">quelques tricks</p>
+    </div>
+{% endblock %}
