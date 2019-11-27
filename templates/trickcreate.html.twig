@@ -1,1 +1,58 @@
 {% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if update %}
+        Modifier le Trick
+    {% else %}
+        Créer un Trick
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <!--
+    TODO
+    if update
+    formulaire avec les champs deja rempli
+    -->
+    {% if update %}
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                <h1>Modification {{ trick.name }}</h1>
+            </div>
+
+            {{ form_start(trickForm) }}
+            <div class="form-group">
+            <label for="">Nom</label>
+            {{ form_widget(trickForm.name) }}
+            </div>
+            <div class="form-group">
+                <label for="">Description</label>
+                {{ form_widget(trickForm.description) }}
+            </div>
+            <div class="form-group">
+                <label for="">Type de figure</label>
+                {{ form_widget(trickForm.figureGroup) }}
+            </div>
+
+            <button class="btn btn-lg btn-primary">Modifier le Trick le trick</button>
+            {{ form_end(trickForm) }}
+        </div>
+    {% else %}
+    <div class="row justify-content-center">
+        {% if success %}
+            <div class="alert alert-success">
+                <p>Le trick {{ success.name }} a bien été crée!</p>
+            </div>
+        {% endif %}
+
+        {{ form_start(trickForm) }}
+        {{ form_row(trickForm.name) }}
+        {{ form_row(trickForm.description) }}
+        {{ form_row(trickForm.figureGroup) }}
+
+        <button class="btn btn-lg btn-primary">Créer le trick</button>
+        {{ form_end(trickForm) }}
+    </div>
+    {% endif %}
+
+{% endblock %}
