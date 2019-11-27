@@ -17,7 +17,6 @@ class TrickCreateUpdateType extends AbstractType
             ->add('figureGroup')
             ->add('illustration')
             ->add('trickVideo')
-            ->add('createdAt')
         ;
     }
 
