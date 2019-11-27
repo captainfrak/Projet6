@@ -59,7 +59,7 @@ class Trick
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -71,7 +71,7 @@ class Trick
         return $this->description;
     }
 
-    public function setDescription(string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
@@ -83,7 +83,7 @@ class Trick
         return $this->figureGroup;
     }
 
-    public function setFigureGroup(string $figureGroup): self
+    public function setFigureGroup(?string $figureGroup): self
     {
         $this->figureGroup = $figureGroup;
 
