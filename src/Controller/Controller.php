@@ -12,8 +12,9 @@ class Controller extends AbstractController
     */
     public function index()
     {
+        $user = $this->getUser();
         return $this->render('index.html.twig', [
-            'user' => false
+            'user' => $user
         ]);
     }
 
