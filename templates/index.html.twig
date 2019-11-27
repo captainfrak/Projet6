@@ -10,10 +10,16 @@
         z-index: 2;
     }
     #test-center {
-        margin-top: 25%;
+        margin-top: 40%;
     }
     #main-pic {
         background-image: url("{{ asset('../../img/main/main-bg.jpg') }}");
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 100%;
+    }
+    .span-title {
+        color: #313131;
     }
 </style>
 
@@ -21,7 +27,7 @@
     <div class="row">
         <div class="col text-center" id="test-center">
             <h1>Snow Tricks</h1>
-            <span>Votre site sur le snowboard</span>
+            <span class="span-title">Votre site sur le snowboard</span>
         </div>
     </div>
 </div>
