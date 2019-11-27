@@ -5,27 +5,45 @@
 
 {% block body %}
     <style>
-        .section {
-            height: 80vh;
-        }
         #tricks-main {
             margin-top: 30px;
+        }
+        .card {
+            margin-bottom: 30px;
         }
     </style>
     <div class="section" id="tricks-main">
         <div class="row justify-content-center" id="section-tricks">
-            <div class="col-3">
-                <p>test</p>
+            {% if deleteComplete %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <p>Le trick a bien été supprimé!</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% if trickUpdate %}
+                <div class="col-10 text-center">
+                    <div class="alert alert-success">
+                        <p>Le trick {{ trick }} à bien été modifié!</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% for trick in tricks %}
+            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 col-xs-8">
+                <div class="card">
+                    <img src="" class="card-img-top" style="height: 300px" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ trick.name }}</h5>
+                        <a href="/tricks/{{ trick.name }}">
+
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            Voir le trick
+                        </button>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="col-3">
-                <p>test</p>
-            </div>
-            <div class="col-3">
-                <p>test</p>
-            </div>
-            <div class="col-3">
-                <p>test</p>
-            </div>
+            {% endfor %}
         </div>
     </div>
 
