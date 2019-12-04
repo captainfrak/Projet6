@@ -9,50 +9,46 @@
 {% endblock %}
 
 {% block body %}
-    <!--
-    TODO
-    if update
-    formulaire avec les champs deja rempli
-    -->
-    {% if update %}
         <div class="row justify-content-center">
             <div class="col-12 text-center">
-                <h1>Modification {{ trick.name }}</h1>
+                {% if update %}
+                    <h1>Modification {{ trick.name }}</h1>
+                {% else %}
+                    <h1>Créer un Trick</h1>
+                {% endif %}
             </div>
 
-            {{ form_start(trickForm) }}
-            <div class="form-group">
-            <label for="">Nom</label>
-            {{ form_widget(trickForm.name) }}
-            </div>
-            <div class="form-group">
-                <label for="">Description</label>
-                {{ form_widget(trickForm.description) }}
-            </div>
-            <div class="form-group">
-                <label for="">Type de figure</label>
-                {{ form_widget(trickForm.figureGroup) }}
+            <div class="col-10">
+                {{ form_start(trickForm) }}
+                    <div class="form-group">
+                        <label for="">Nom</label>
+                        {{ form_widget(trickForm.name) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Description</label>
+                        {{ form_widget(trickForm.description) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.figureGroup) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.illustration) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.trickVideo) }}
+                    </div>
+                    {% if update %}
+                        <button class="btn btn-lg btn-primary">Modifier le Trick</button>
+                    {% else %}
+                        <button class="btn btn-lg btn-primary">Créer le Trick</button>
+                    {% endif %}
+                {{ form_end(trickForm) }}
             </div>
 
-            <button class="btn btn-lg btn-primary">Modifier le Trick le trick</button>
-            {{ form_end(trickForm) }}
         </div>
-    {% else %}
-    <div class="row justify-content-center">
-        {% if success %}
-            <div class="alert alert-success">
-                <p>Le trick {{ success.name }} a bien été crée!</p>
-            </div>
-        {% endif %}
 
-        {{ form_start(trickForm) }}
-        {{ form_row(trickForm.name) }}
-        {{ form_row(trickForm.description) }}
-        {{ form_row(trickForm.figureGroup) }}
-
-        <button class="btn btn-lg btn-primary">Créer le trick</button>
-        {{ form_end(trickForm) }}
-    </div>
-    {% endif %}
 
 {% endblock %}
