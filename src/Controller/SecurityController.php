@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,18 +43,18 @@ class SecurityController extends AbstractController
     /**
      * @Route("/checkit/{token}", name="token_check")
      * @param $token
+     * @param ObjectManager $manager
      * @return RedirectResponse|Response
      */
-    public function checkIt($token)
+    public function checkIt($token, ObjectManager $manager)
     {
         $repo = $this->getDoctrine()->getRepository(User::class);
         $user = $repo->findOneBy(['token'=> $token]);
 
         if ($user) {
             $user->setToken(null);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $manager->persist($user);
+            $manager->flush();
             return $this->redirectToRoute('home');
         } else {
             return $this->render('security/check.html.twig', ['userNotFound' => true, 'user' => null]);
