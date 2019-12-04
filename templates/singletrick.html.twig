@@ -7,6 +7,13 @@
         #trick-main {
             margin-top: 30px;
         }
+        #trick-comment {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        #comment-block {
+            margin-top: 20px;
+        }
     </style>
 
     <section id="trick-main">
@@ -17,8 +24,50 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ trick.name }}</h5>
                         <p>{{ trick.description }}</p>
+                        <p><small>{{ trick.createdAt | date("d/m/Y") }}</small></p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <hr>
+
+    <section id="trick-comment">
+        <div class="row justify-content-center">
+            <div class="col-10" style="display: flex">
+                {% if user %}
+                    <div class="col-10 text-center">
+                        {{ form_start(commentForm) }}
+                            <label for="">Votre message</label>
+                            {{ form_widget(commentForm.content) }}
+                    </div>
+                    <div class="col-2 text-center">
+                        <button class="btn btn-primary" type="submit">envoyer</button>
+                    </div>
+                        {{ form_end(commentForm) }}
+                {% else %}
+                    <div class="col text-center">
+                        <p>Merci de vous enregistrer afin de pouvoir échanger avec la communauté sur ce Trick!</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-10 text-center" id="comment-block">
+                {% if comments == null %}
+                    <p>Pas de commentaires pour le moment!</p>
+                {% else %}
+                    {% for comment in comments %}
+                        <div class="row">
+                            <div class="col-4">
+                                <p>{{ comment.author.username }}</p>
+                                <small>date de publication : {{ comment.createdAt | date("d/m/Y") }}</small>
+                            </div>
+                            <div class="col-8">
+                                <p>{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </section>
