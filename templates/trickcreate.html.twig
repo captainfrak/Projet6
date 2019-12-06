@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if update %}
+        Modifier le Trick
+    {% else %}
+        Créer un Trick
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+        <div class="row justify-content-center">
+            <div class="col-12 text-center">
+                {% if update %}
+                    <h1>Modification {{ trick.name }}</h1>
+                {% else %}
+                    <h1>Créer un Trick</h1>
+                {% endif %}
+            </div>
+
+            <div class="col-10">
+                {{ form_start(trickForm) }}
+                    <div class="form-group">
+                        <label for="">Nom</label>
+                        {{ form_widget(trickForm.name) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Description</label>
+                        {{ form_widget(trickForm.description) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.figureGroup) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.illustration) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="">Type de figure</label>
+                        {{ form_widget(trickForm.trickVideo) }}
+                    </div>
+                    {% if update %}
+                        <button class="btn btn-lg btn-primary">Modifier le Trick</button>
+                    {% else %}
+                        <button class="btn btn-lg btn-primary">Créer le Trick</button>
+                    {% endif %}
+                {{ form_end(trickForm) }}
+            </div>
+
+        </div>
+
+
+{% endblock %}

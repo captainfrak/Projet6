@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Tricks - Snow Tricks{% endblock %}
+
+
+
+{% block body %}
+    <style>
+        #tricks-main {
+            margin-top: 30px;
+        }
+        .card {
+            margin-bottom: 30px;
+        }
+    </style>
+    <div class="section" id="tricks-main">
+        <div class="row justify-content-center" id="section-tricks">
+            {% if deleteComplete %}
+                <div class="col-12 text-center">
+                    <div class="alert alert-info">
+                        <p>Le trick a bien été supprimé!</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% if trickUpdate %}
+                <div class="col-10 text-center">
+                    <div class="alert alert-success">
+                        <p>Le trick {{ trick }} à bien été modifié!</p>
+                    </div>
+                </div>
+            {% endif %}
+            {% for trick in tricks %}
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-8">
+                <div class="card">
+                    <img src="" class="card-img-top" style="height: 300px" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ trick.name }}</h5>
+                        <div class="row">
+
+                        <a class="col-5" href="/tricks/{{ trick.name }}">
+                        <button type="button" class="btn btn-primary">
+                            {{ trick.name }}
+                        </button>
+                        </a>
+                        {% if user %}
+                        <a class="col-3" href="tricks/update/{{ trick.name }}">
+                            <button class="btn btn-danger"><i class="fas fa-pencil-alt fa-sm"></i></button>
+                        </a>
+                            <a class="col-3" href="tricks/delete/{{ trick.name }}">
+                                <button class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            </a>
+                        {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>Dernière modification :{{ trick.createdAt | date("d/m/Y") }}</small>
+                        <p><small>par :author</small></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
