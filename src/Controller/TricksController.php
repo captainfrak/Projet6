@@ -4,15 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
-use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\TrickCreateUpdateType;
 use DateTime;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,11 +37,11 @@ class TricksController extends AbstractController
      * @Route("tricks/{name}", name="singletrick")
      * @param Request $request
      * @param Trick $trick
-     * @param ObjectManager $manager
+     * @param EntityManagerInterface $manager
      * @return Response
      * @throws Exception
      */
-    public function singleTrick(Request $request,Trick $trick, ObjectManager $manager)
+    public function singleTrick(Request $request,Trick $trick, EntityManagerInterface $manager)
     {
         $user = $this->getUser();
 
@@ -78,13 +76,13 @@ class TricksController extends AbstractController
      * @Route("/tricks/update/{name}", name="trickupdate")
      * @param Trick|null $trick
      * @param Request $request
-     * @param ObjectManager $manager
      * @return Response
      * @throws Exception
      */
-    public function trickForm(Trick $trick = null, Request $request, ObjectManager $manager)
+    public function trickForm(Trick $trick = null, Request $request)
     {
         $user = $this->getUser();
+        $manager = $this->getDoctrine()->getManager();
 
         if (!$user) { return $this->redirectToRoute('home');}
 
@@ -94,7 +92,9 @@ class TricksController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setCreatedAt(new DateTime());
+            $trick
+                ->setCreatedAt(new DateTime())
+                ->setAuthor($user);
 
             $manager->persist($trick);
             $manager->flush();
