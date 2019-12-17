@@ -52,9 +52,20 @@ class User implements UserInterface
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Trick", mappedBy="author")
+     */
+    private $tricks;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\ProfilePic", mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $profilePic;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->tricks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -185,6 +196,55 @@ class User implements UserInterface
             if ($comment->getAuthor() === $this) {
                 $comment->setAuthor(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trick[]
+     */
+    public function getTricks(): Collection
+    {
+        return $this->tricks;
+    }
+
+    public function addTrick(Trick $trick): self
+    {
+        if (!$this->tricks->contains($trick)) {
+            $this->tricks[] = $trick;
+            $trick->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrick(Trick $trick): self
+    {
+        if ($this->tricks->contains($trick)) {
+            $this->tricks->removeElement($trick);
+            // set the owning side to null (unless already changed)
+            if ($trick->getAuthor() === $this) {
+                $trick->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getProfilePic(): ?ProfilePic
+    {
+        return $this->profilePic;
+    }
+
+    public function setProfilePic(?ProfilePic $profilePic): self
+    {
+        $this->profilePic = $profilePic;
+
+        // set (or unset) the owning side of the relation if necessary
+        $newUser = null === $profilePic ? null : $this;
+        if ($profilePic->getUser() !== $newUser) {
+            $profilePic->setUser($newUser);
         }
 
         return $this;
