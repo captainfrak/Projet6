@@ -33,15 +33,23 @@
                         {{ form_widget(trickForm.figureGroup) }}
                     </div>
                     <div class="form-group">
-                        <label for="">Type de figure</label>
+                        <label for="">Illustration</label>
                         {{ form_widget(trickForm.illustration) }}
                     </div>
                     <div class="form-group">
-                        <label for="">Type de figure</label>
+                        <label for="">Video</label>
                         {{ form_widget(trickForm.trickVideo) }}
                     </div>
                     {% if update %}
                         <button class="btn btn-lg btn-primary">Modifier le Trick</button>
+                        <button class="btn btn-lg btn-danger">
+                            <a
+                                    href="{{ path('trickdelete', {name: trick.name}) }}"
+                                    style="color:white;text-decoration: none;"
+                            >
+                                Supprimer le Trick
+                            </a>
+                        </button>
                     {% else %}
                         <button class="btn btn-lg btn-primary">Créer le Trick</button>
                     {% endif %}
