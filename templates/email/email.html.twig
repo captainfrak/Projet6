@@ -1,8 +1,20 @@
-<!Doctype html>
-<html>
-    <head></head>
-    <body>
-    <a href="{{ app.request.getSchemeAndHttpHost() }}/{{ token }}">Validez votre compte</a>
-    </body>
-</html>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h1>Snowtricks</h1>
+        </div>
+        <div class="col-12">
+            <h2>Salut {{ user.username }}</h2>
+        </div>
+    </div>
+    <div class="col-12">
+        <p>Merci de cliquer sur le lien pour valider ton compte !</p>
+    </div>
+    <div class="col-12">
+        <a href="{{ path('token_check', {token: token }) }}">Validez votre compte</a>
+    </div>
+</div>
+
+
 
