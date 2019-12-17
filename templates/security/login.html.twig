@@ -3,18 +3,29 @@
 {% block title %}Connexion!{% endblock %}
 
 {% block body %}
+    <style>
+        #login-main {
+            height: 80vh;
+        }
+        h1 {
+            margin-top: 35px;
+        }
+        #login-btn {
+            margin-top: 15px;
+        }
+    </style>
 <form method="post">
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+    <div class="row justify-content-center" id="login-main">
+        <div class="col-12 text-center">
+            <h1>Connexion</h1>
         </div>
-    {% endif %}
 
-    <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
+<div class="col-8">
+    <div class="from-group">
     <label for="inputEmail">Email</label>
     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
 
@@ -25,23 +36,16 @@
     <input type="hidden" name="_csrf_token"
            value="{{ csrf_token('authenticate') }}"
     >
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-    <button type="submit" class="btn btn-lg btn-primary">
-        <a href="/register" style="text-decoration: none; color: white;">Créer un compte</a>
-    </button>
+    </div>
+    <div class="form-group text-center" id="login-btn">
+        <button class="btn btn-primary" type="submit">
+            Se connecter
+        </button>
+    </div>
+    <div class="form-group text-center">
+        <a href="/register"  style="text-decoration: none;">Créer un compte?</a>
+    </div>
+</div>
+    </div>
 </form>
 {% endblock %}
