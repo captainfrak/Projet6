@@ -19,39 +19,70 @@
 
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('home') }}">Accueil</a>
+                        <li class="nav-item">
+                            <a class="btn nav-link" href="{{ path('home') }}">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ path('tricklist') }}">Tricks</a>
+                            <a class="btn nav-link" href="{{ path('tricklist') }}">Tricks</a>
                         </li>
                         {% if user %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('trickcreate') }}">Créer un Trick</a>
+                                <a class="btn nav-link" href="{{ path('trickcreate') }}">Créer un Trick</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                                <a class="btn nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
                             </li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ path('app_login') }}">connexion</a>
+                                <a class="btn nav-link" href="{{ path('app_login') }}">Connexion</a>
                             </li>
+                            <li class="nav-item">
+                            <a class="btn nav-link" href="{{ path('app_register') }}">Créer un compte</a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>
             </nav>
+            {% if user %}
+            <div class="">
+                <div class="col-5">
+                    <a class="btn btn-warning" href="/account/{{ user.username }}">
+                        <img class="rounded-circle" src="http://sylvainsaez.fr/Public/img/profil/pp.jpg" style="height: 30px" alt="">
+                         Mon profil</a>
+                </div>
+            </div>
+            {% endif %}
         {% endblock %}
         <div class="container">
             {% block body %}
             {% endblock %}
         </div>
         {% block footer %}
-            <footer id="footer" style="bottom: 0px;">
-                <div class="col justify-content-center">
+            <footer id="footer" style="position: relative;bottom: 5%;">
+                <div class="col text-center">
                     2019 | FrakDev
                 </div>
             </footer>
         {% endblock %}
+
+        {% block mobile %}
+        <div class="col d-lg-none d-xl-none d-md-none d-sm-block" style="background-color: #222222;color: white; padding-top: 10px; padding-bottom: 10px; position: fixed; bottom: 0px">
+            <div class="row justify-content-around">
+                <a href="{{ path('home') }}" style="color: white"><i class="fas fa-home fa-w-18 fa-3x"></i></a>
+                <a href="{{ path('tricklist') }}" style="color: white"><i class="fas fa-snowboarding fa-w-18 fa-3x"></i></a>
+                {% if user %}
+                    <a href="{{ path('app_logout') }}" style="color: white">
+                        <i class="fas fa-sign-out-alt fa-w-18 fa-3x"></i>
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_login') }}" style="color: white">
+                        <i class="fas fa-sign-in-alt fa-w-18 fa-3x"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endblock %}
+
         {% block javascripts %}
         {% endblock %}
     </body>
