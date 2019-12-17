@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gestion du mot de passe - SnowTricks {% endblock %}
+
+{% block body %}
+    <h1>Ici, tu peux changer ton mot de passe</h1>
+    {% if checkAgain %}
+    <div class="alert alert-danger">
+        Les mots de passe doivent être identique!
+    </div>
+    {% endif %}
+    {{ form_start(passChange) }}
+    {{ form_row(passChange.password) }}
+    {{ form_row(passChange.password2) }}
+    <div class="from-group text-center">
+        <button class="btn btn-primary">Modifier le mot de passe</button>
+    </div>
+    {{ form_end(passChange) }}
+{% endblock %}
