@@ -24,7 +24,13 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ trick.name }}</h5>
                         <p>{{ trick.description }}</p>
-                        <p><small>{{ trick.createdAt | date("d/m/Y") }}</small></p>
+                    </div>
+                    <div class="card-footer">
+                        <p>
+                            <small>
+                                Trick créer par : {{ trick.author.username }}, le: {{ trick.createdAt | date("d/m/Y") }}
+                            </small>
+                        </p>
                     </div>
                 </div>
             </div>
