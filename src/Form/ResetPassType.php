@@ -13,6 +13,7 @@ class ResetPassType extends AbstractType
     {
         $builder
             ->add('password', PasswordType::class)
+            ->add('password2', PasswordType::class)
         ;
     }
 
