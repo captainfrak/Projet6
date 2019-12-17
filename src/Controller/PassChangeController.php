@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Form\PassAskEmailType;
 use App\Form\ResetPassType;
 use Exception;
-use phpDocumentor\Reflection\Types\This;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,7 +44,7 @@ class PassChangeController extends AbstractController
                 ->setFrom('hello@example.com')
                 ->setTo('you@example.com')
                 ->setSubject('Changement du mot de passe')
-                ->setBody($this->renderView('email/resetPassEmail.html.twig', ['token' => $token]));
+                ->setBody($this->renderView('email/resetPassEmail.html.twig', ['token' => $token]), 'text/html');
 
             $mailer->send($email);
 
