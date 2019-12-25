@@ -2,9 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\ProfilePic;
 use App\Entity\User;
 use App\Form\ResetPassType;
+use App\Form\UploadType;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,17 +19,71 @@ class AccountController extends AbstractController
 {
     /**
      * @Route("/account/{username}", name="account")
+     * @param Request $request
      * @param User $user
      * @return Response
+     * @throws Exception
      */
-    public function account(User $user)
+    public function account(Request $request,User $user)
     {
+        $profilePic = new ProfilePic();
+        $form = $this->createForm(UploadType::class, $profilePic);
+        $form->handleRequest($request);
+        $manager = $this->getDoctrine()->getManager();
+
         if (!$user) { $this->redirectToRoute('home'); };
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            $picFile = $form['photo']->getData();
 
+            if ($picFile) {
+                if ($user->getProfilePic() != null) {
+                    $profilePic = $user->getProfilePic();
+                    $filesystem = new Filesystem();
+
+                    try {
+                        $filesystem->remove(
+                            $this->getParameter('userPics_directory'),
+                            $profilePic);
+                    } catch (FileException $exception) {
+
+                    }
+                    $profilePic->setName('');
+                    $manager->persist($profilePic);
+                    $manager->flush();
+                }
+                $fileName = md5(random_bytes(10)).'.'.$picFile->guessExtension();
+                try {
+                    $picFile->move(
+                        $this->getParameter('userPics_directory'),
+                        $fileName
+                    );
+                } catch (FileException $exception) {
+
+                }
+
+                $profilePic
+                ->setName($fileName)
+                ->setUser($user);
+
+                $manager->persist($profilePic);
+                $manager->flush();
+
+                return $this->render(
+                    'account/account.html.twig', [
+                        'user' => $user,
+                        'newPic' => true,
+                        'success' => false,
+                        'uploadForm' => $form->createView()
+                    ]
+                );
+            }
+        }
         return $this->render('account/account.html.twig', [
             'user' => $user,
-            'success' => false
+            'success' => false,
+            'newPic' => null,
+            'uploadForm' => $form->createView()
         ]);
     }
 
