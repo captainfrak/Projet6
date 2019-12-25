@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
