@@ -4,8 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    trickpics_directory : '%kernel.project_dir%/public/trickpics'
-    userpics_directory : '%kernel.project_dir%/public/userpics'
+    trickPics_directory : '%kernel.project_dir%/public/trickpics'
+    userPics_directory : '%kernel.project_dir%/public/userpics'
 
 services:
     # default configuration for services in *this* file
