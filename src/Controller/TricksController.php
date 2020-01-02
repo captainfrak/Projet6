@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
+use App\Entity\TrickVideo;
 use App\Form\CommentType;
 use App\Form\TrickCreateUpdateType;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -86,14 +86,19 @@ class TricksController extends AbstractController
 
         if (!$user) { return $this->redirectToRoute('home');}
 
-        if (!$trick) { $trick = new Trick(); }
+        if (!$trick) {
+            $trick = new Trick();
+        }
 
         $form = $this->createForm(TrickCreateUpdateType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
             $trick
                 ->setCreatedAt(new DateTime())
+                ->setTrickVideos($form->get("trickVideos")->getData())
                 ->setAuthor($user);
 
             $manager->persist($trick);
@@ -104,6 +109,7 @@ class TricksController extends AbstractController
                 'user' => $user,
             ]);
         }
+
         return $this->render('trickcreate.html.twig', [
             'trickForm' => $form->createView(),
             'update' => $trick->getId() !== null,
