@@ -34,11 +34,17 @@
                     </div>
                     <div class="form-group">
                         <label for="">Illustration</label>
-                        {{ form_widget(trickForm.illustration) }}
+                        {{ form_row(trickForm.trickPics.vars.prototype.name) }}
+                        {% for trickPic in trickForm.trickPics %}
+                            {{ form_widget(trickPick) }}
+                        {% endfor %}
+                        {#{{ form_widget(trickForm.illustration) }}#}
                     </div>
                     <div class="form-group">
                         <label for="">Video</label>
-                        {{ form_widget(trickForm.trickVideo) }}
+                        {% for trickVideo in trickForm.trickVideos %}
+                            {{ form_widget(trickVideo) }}
+                        {% endfor %}
                     </div>
                     {% if update %}
                         <button class="btn btn-lg btn-primary">Modifier le Trick</button>
