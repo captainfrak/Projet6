@@ -44,6 +44,13 @@
 
 <div class="section" id="main-pic">
     <div class="row">
+        {% if passchange %}
+        <div class="col-12">
+            <div class="alert alert-success">
+                Un email vous a été envoyé pour changer votre mot de passe!
+            </div>
+        </div>
+        {% endif %}
         <div class="col text-center" id="test-center">
             <h1>Snow Tricks</h1>
             <span class="span-title">Votre site sur le snowboard</span>
