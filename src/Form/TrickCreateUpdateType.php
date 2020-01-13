@@ -3,8 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Trick;
+use App\Entity\TrickGroup;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,27 +18,19 @@ class TrickCreateUpdateType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('figureGroup')
-            /*->add('illustration', FileType::class, [
-                'label' => 'Selectionner votre image',
+            ->add('trickGroup', EntityType::class, [
+                'class' => TrickGroup::class,
+                'choice_label' => 'category',
+                'mapped' => false
+            ])
+            ->add('picName', FileType::class, [
+                'label' => 'Image',
+                'required' => false,
+                'mapped' =>false
+            ])
+            ->add('trickVid',TextType::class, [
                 'mapped' => false,
                 'required' => false,
-            ])*/
-            ->add('trickPics', CollectionType::class, [
-                'entry_type' => TrickPicFormType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'required' => false,
-                'prototype' => true
-            ])
-            ->add('trickVideos', CollectionType::class, [
-                'entry_type' => TextType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'required' => false,
-                'prototype' => true
             ])
             ;
     }
