@@ -43,10 +43,10 @@ class AccountController extends AbstractController
 
                     try {
                         $filesystem->remove(
-                            $this->getParameter('userPics_directory'),
-                            $profilePic);
+                            $this->getParameter('upload_directory'). "/" . $profilePic->getName()
+                            );
                     } catch (FileException $exception) {
-
+                        echo "Problème lors de la suppression de l'ancienne image";
                     }
                     $profilePic->setName('');
                     $manager->persist($profilePic);
@@ -55,11 +55,12 @@ class AccountController extends AbstractController
                 $fileName = md5(random_bytes(10)).'.'.$picFile->guessExtension();
                 try {
                     $picFile->move(
-                        $this->getParameter('userPics_directory'),
+                        $this->getParameter('upload_directory'),
                         $fileName
                     );
                 } catch (FileException $exception) {
-
+                    echo "Veuillez essayer à nouveau plus tard";
+                    die();
                 }
 
                 $profilePic
