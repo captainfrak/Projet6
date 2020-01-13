@@ -68,35 +68,6 @@ class MediasController extends AbstractController
         // TODO add the flash to the view
         return $this->redirectToRoute('trickupdate', ['name' => $trick] );
     }
-    /**
-     * @Route("/medias/edit/{picName}", name="editPic")
-     * @param TrickPic $trickPic
-     * @param Request $request
-     * @return Response
-     */
-    public function editPic(TrickPic $trickPic, Request $request)
-    {
-        $user = $this->getUser();
-
-        if (!$user) { $this->redirectToRoute('home');}
-
-            $form = $this->createForm(TrickPicFormType::class);
-            $form->handleRequest($request);
-
-            if($form->isSubmitted() && $form->isValid()) {
-                $trickPic->setPicName($form->get('picName')->getData());
-                $manager = $this->getDoctrine()->getManager();
-                $manager->persist($trickPic);
-                $manager->flush();
-
-                return $this->redirectToRoute('trickupdate', ['name' => $trickPic->getTrick()->getName()]);
-
-            }
-            return $this->render('medias/editPic.html.twig', [
-                'pics' => $trickPic,
-                'updateForm' => $form->createView()
-            ]);
-    }
 
     // Just for testing the layout of emails
 
