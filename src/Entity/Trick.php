@@ -53,19 +53,20 @@ class Trick
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\TrickPic", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickPic", mappedBy="trick",cascade={"persist"}, orphanRemoval=true)
      */
     private $trickPics;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickVid", mappedBy="trick", orphanRemoval=true)
      */
-    private $trickVideos;
+    private $trickVids;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->trickPics = new ArrayCollection();
+        $this->trickVids = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,7 +179,6 @@ class Trick
             $this->trickPics[] = $trickPic;
             $trickPic->setTrick($this);
         }
-
         return $this;
     }
 
@@ -191,23 +191,38 @@ class Trick
                 $trickPic->setTrick(null);
             }
         }
-
         return $this;
     }
 
     /**
-     *
+     * @return Collection|TrickVid[]
      */
-    public function getTrickVideos(): array
+    public function getTrickVids(): Collection
     {
-        return explode("\n", $this->trickVideos);
+        return $this->trickVids;
     }
 
-    public function setTrickVideos(array $videos): self
+    public function addTrickVid(TrickVid $trickVid): self
     {
-        $this->trickVideos = implode("\n", $videos);
+        if (!$this->trickVids->contains($trickVid)) {
+            $this->trickVids[] = $trickVid;
+            $trickVid->setTrick($this);
+        }
 
         return $this;
     }
 
+    public function removeTrickVid(TrickVid $trickVid): self
+    {
+        if ($this->trickVids->contains($trickVid)) {
+            $this->trickVids->removeElement($trickVid);
+            // set the owning side to null (unless already changed)
+            if ($trickVid->getTrick() === $this) {
+                $trickVid->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
 }
+
