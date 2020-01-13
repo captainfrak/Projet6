@@ -18,7 +18,7 @@ class Controller extends AbstractController
         return $this->render('index.html.twig', [
             'user' => $user,
             'tricks' => $tricks,
-            'passchange' => false
+            'passchange' => false,
         ]);
     }
 
