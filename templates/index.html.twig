@@ -63,12 +63,20 @@
             {% for trick in tricks %}
                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-xs-8 trick" id="main-card">
                     <div class="card">
-                        <img src="http://placehold.it/350x300" class="card-img-top" style="height: 300px" alt="...">
+                        <img src="
+                        {% for pic in trick.trickPics %}
+                            {% if loop.index == 1 %}
+                                /upload/{{ pic.picName }}
+                            {% endif %}
+                        {% else %}
+                            {{ asset('img/NoIMG/NoImgYet.jpg') }}
+                        {% endfor %}
+                        " class="card-img-top" style="border: 1px solid lightgray;height: 250px" alt="...">
                         <div class="card-body">
                             <h5 class="card-title">{{ trick.name }}</h5>
                             <div class="row">
 
-                                <a class="col-5" href="/tricks/{{ trick.name }}">
+                                <a class="col" href="/tricks/{{ trick.name }}">
                                     <button type="button" class="btn btn-primary">
                                         {{ trick.name }}
                                     </button>
@@ -109,7 +117,6 @@
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
     <script>
         $(function () {
             $("div.trick").slice(0, 6).show();
