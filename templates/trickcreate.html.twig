@@ -9,60 +9,148 @@
 {% endblock %}
 
 {% block body %}
-        <div class="row justify-content-center">
-            <div class="col-12 text-center">
-                {% if update %}
-                    <h1>Modification {{ trick.name }}</h1>
-                {% else %}
-                    <h1>Créer un Trick</h1>
-                {% endif %}
-            </div>
-
-            <div class="col-10">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            {% if update %}
+                <h1>Modification {{ trick.name }}</h1>
+            {% else %}
+                <h1>Créer un Trick</h1>
+            {% endif %}
+        </div>
+        {% if update %}
+            <div class="col-xl-5 col-lg-5 col-md-12 col-xs-12">
                 {{ form_start(trickForm) }}
+                <div class="form-group">
+                    <label for="">Nom</label>
+                    {{ form_widget(trickForm.name) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Description</label>
+                    {{ form_widget(trickForm.description) }}
+                </div>
+                <fieldset disabled>
                     <div class="form-group">
-                        <label for="">Nom</label>
-                        {{ form_widget(trickForm.name) }}
+                        <label for="exampleFormControlSelect1">Type de figure</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>{{ trick.figureGroup }}</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="">Description</label>
-                        {{ form_widget(trickForm.description) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="">Type de figure</label>
-                        {{ form_widget(trickForm.figureGroup) }}
-                    </div>
-                    <div class="form-group">
-                        <label for="">Illustration</label>
-                        {{ form_row(trickForm.trickPics.vars.prototype.name) }}
-                        {% for trickPic in trickForm.trickPics %}
-                            {{ form_widget(trickPick) }}
-                        {% endfor %}
-                        {#{{ form_widget(trickForm.illustration) }}#}
-                    </div>
-                    <div class="form-group">
-                        <label for="">Video</label>
-                        {% for trickVideo in trickForm.trickVideos %}
-                            {{ form_widget(trickVideo) }}
-                        {% endfor %}
-                    </div>
-                    {% if update %}
-                        <button class="btn btn-lg btn-primary">Modifier le Trick</button>
-                        <button class="btn btn-lg btn-danger">
-                            <a
-                                    href="{{ path('trickdelete', {name: trick.name}) }}"
-                                    style="color:white;text-decoration: none;"
-                            >
-                                Supprimer le Trick
-                            </a>
-                        </button>
-                    {% else %}
-                        <button class="btn btn-lg btn-primary">Créer le Trick</button>
-                    {% endif %}
+                </fieldset>
+                <div class="form-group d-none">
+                    <label for="">Type de figure</label>
+                    {{ form_widget(trickForm.trickGroup) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Ajouter une autre image</label>
+                    {{ form_widget(trickForm.picName) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Ajouter une autre vidéo</label>
+                    <p><small>Ne mettre que l'url (ex: www.google.com)</small></p>
+                    {{ form_widget(trickForm.trickVid) }}
+                </div>
+                <button class="btn btn-lg btn-primary">Modifier le Trick</button>
+                <button class="btn btn-lg btn-danger">
+                    <a href="{{ path('trickdelete', {name: trick.name}) }}"
+                       style="color:white;text-decoration: none;"
+                    >
+                        Supprimer le Trick
+                    </a>
+                </button>
                 {{ form_end(trickForm) }}
             </div>
-
-        </div>
+            <div class="col-xl-7 col-lg-7 col-md-12 col-xs-12">
+                <div class="row">
+                    <div class="col-12">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active"
+                                   id="nav-home-tab"
+                                   data-toggle="tab"
+                                   href="#nav-Pic"
+                                   role="tab"
+                                   aria-controls="nav-home"
+                                   aria-selected="true">
+                                    <h4>Les images</h4>
+                                </a>
+                                <a class="nav-item nav-link"
+                                   id="nav-profile-tab"
+                                   data-toggle="tab"
+                                   href="#nav-Vid"
+                                   role="tab"
+                                   aria-controls="nav-profile"
+                                   aria-selected="false">
+                                    <h4>Les Vidéos</h4>
+                                </a>
+                            </div>
+                        </nav>
+                    </div>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active"
+                                id="nav-Pic"
+                                role="tabpanel"
+                                aria-labelledby="nav-Pic-tab">
+                                <div class="row">
+                            {% for pic in trick.trickPics %}
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="card mt-2" style="position: relative;">
+                                        <div class="card-body">
+                                            <img class="w-100" style="max-height: 300px" src="/upload/{{ pic.picName }}" alt="">
+                                            <a href="/trickpic/delete/{{ pic.id }}" class="btn btn-danger" style="position: absolute;top:0;right: 0;"><i class="fas fa-trash-alt"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade"
+                                id="nav-Vid"
+                                role="tabpanel"
+                                aria-labelledby="nav-Vid-tab">
+                                <div class="row">
+                                        <div class="card-group">
+                                    {% for vids in trick.trickVids %}
+                                            <div class="card mt-2 mx-2" style="position: relative;">
+                                                <div class="card-body">
+                                                    <iframe  src="https://{{ vids.url }}" allow="autoplay" allowfullscreen></iframe>
+                                                    <a href="/trickvid/delete/vids.id" class="btn btn-danger" style="position: absolute;top:0;right: 0;"><i class="fas fa-trash-alt"></i></a>
+                                                </div>
+                                            </div>
+                                    {% endfor %}
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-10">
+                {{ form_start(trickForm) }}
+                <div class="form-group">
+                    <label for="">Nom</label>
+                    {{ form_widget(trickForm.name) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Description</label>
+                    {{ form_widget(trickForm.description) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Type de figure</label>
+                    {{ form_widget(trickForm.trickGroup) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Ajouter une image</label>
+                    {{ form_widget(trickForm.picName) }}
+                </div>
+                <div class="form-group">
+                    <label for="">Ajouter une vidéo</label>
+                    {{ form_widget(trickForm.trickVid) }}
+                </div>
+                <button class="btn btn-lg btn-primary">Créer le Trick</button>
+                {{ form_end(trickForm) }}
+            </div>
+        {% endif %}
+    </div>
 
 
 {% endblock %}
