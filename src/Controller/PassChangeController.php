@@ -48,8 +48,9 @@ class PassChangeController extends AbstractController
             $email = (new Swift_Message())
                 ->setFrom('contact@snowtricks.com')
                 ->setTo('you@snowtricks.com')
+                ->setContentType("text/html")
                 ->setSubject('Changement du mot de passe')
-                ->setBody($this->renderView('email/resetPassEmail.html.twig', ['token' => $token]), 'text/html');
+                ->setBody($this->renderView('email/resetPassEmail.html.twig', ['token' => $token]));
 
             $mailer->send($email);
 

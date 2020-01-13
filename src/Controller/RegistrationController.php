@@ -58,6 +58,7 @@ class RegistrationController extends AbstractController
                 $email = (new Swift_Message())
                     ->setFrom('hello@snowtricks.com')
                     ->setTo($user->getEmail())
+                    ->setContentType("text/html")
                     ->setSubject('Confirmation d\'inscription')
                     ->setBody(
                         $this->renderView(
@@ -66,8 +67,7 @@ class RegistrationController extends AbstractController
                                 'token' => $token,
                                 'user' => $user
                             ]
-                        ),
-                        'text/html'
+                        )
                     );
 
                 $mailer->send($email);
