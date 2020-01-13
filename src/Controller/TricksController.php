@@ -4,13 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
-use App\Entity\TrickVideo;
+use App\Entity\TrickPic;
+use App\Entity\TrickVid;
 use App\Form\CommentType;
 use App\Form\TrickCreateUpdateType;
+use App\Form\TrickPicFormType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,7 +48,10 @@ class TricksController extends AbstractController
     {
         $user = $this->getUser();
 
-        $comments = $this->getDoctrine()->getRepository(Comment::class)->findBy(['trick' => $trick->getId()]);
+        $comments = $this->getDoctrine()->getRepository(Comment::class)->findBy(
+            ['trick' => $trick->getId()],
+            ['createdAt' => 'DESC']
+        );
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -89,16 +95,46 @@ class TricksController extends AbstractController
         if (!$trick) {
             $trick = new Trick();
         }
+        $trickPic = new TrickPic();
+        $trickVid = new TrickVid();
 
         $form = $this->createForm(TrickCreateUpdateType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('picName')->getData() != null) {
 
+                $picFile = $form['picName']->getData();
 
+                $fileName = md5(random_bytes(10)).'.'.$picFile->guessExtension();
+                try {
+                    $picFile->move(
+                        $this->getParameter('upload_directory'),
+                        $fileName
+                    );
+                } catch (FileException $exception) {
+                    //mettre exception
+                }
+
+                $trickPic
+                    ->setPicName($fileName)
+                    ->setTrick($trick);
+                $manager->persist($trickPic);
+            }
+            if ($form->get('trickVid')->getData() != null) {
+                $trickVid
+                    ->setUrl($form->get('trickVid')->getData())
+                    ->setTrick($trick);
+                $manager->persist($trickVid);
+            }
+            $currentGroup = $form->get('trickGroup')->getData();
+            $currentCategory = $currentGroup->getCategory();
+            if ($trick->getFigureGroup() != null) {
+                $currentCategory = $trick->getFigureGroup();
+            }
             $trick
+                ->setFigureGroup($currentCategory)
                 ->setCreatedAt(new DateTime())
-                ->setTrickVideos($form->get("trickVideos")->getData())
                 ->setAuthor($user);
 
             $manager->persist($trick);
@@ -109,7 +145,6 @@ class TricksController extends AbstractController
                 'user' => $user,
             ]);
         }
-
         return $this->render('trickcreate.html.twig', [
             'trickForm' => $form->createView(),
             'update' => $trick->getId() !== null,
