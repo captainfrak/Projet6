@@ -4,15 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Trick;
-use App\Entity\User;
+use App\Entity\TrickPic;
+use App\Entity\TrickVid;
 use App\Form\CommentType;
 use App\Form\TrickCreateUpdateType;
+use App\Form\TrickPicFormType;
 use DateTime;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,15 +40,18 @@ class TricksController extends AbstractController
      * @Route("tricks/{name}", name="singletrick")
      * @param Request $request
      * @param Trick $trick
-     * @param ObjectManager $manager
+     * @param EntityManagerInterface $manager
      * @return Response
      * @throws Exception
      */
-    public function singleTrick(Request $request,Trick $trick, ObjectManager $manager)
+    public function singleTrick(Request $request,Trick $trick, EntityManagerInterface $manager)
     {
         $user = $this->getUser();
 
-        $comments = $this->getDoctrine()->getRepository(Comment::class)->findBy(['trick' => $trick->getId()]);
+        $comments = $this->getDoctrine()->getRepository(Comment::class)->findBy(
+            ['trick' => $trick->getId()],
+            ['createdAt' => 'DESC']
+        );
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -78,23 +82,60 @@ class TricksController extends AbstractController
      * @Route("/tricks/update/{name}", name="trickupdate")
      * @param Trick|null $trick
      * @param Request $request
-     * @param ObjectManager $manager
      * @return Response
      * @throws Exception
      */
-    public function trickForm(Trick $trick = null, Request $request, ObjectManager $manager)
+    public function trickForm(Trick $trick = null, Request $request)
     {
         $user = $this->getUser();
+        $manager = $this->getDoctrine()->getManager();
 
         if (!$user) { return $this->redirectToRoute('home');}
 
-        if (!$trick) { $trick = new Trick(); }
+        if (!$trick) {
+            $trick = new Trick();
+        }
+        $trickPic = new TrickPic();
+        $trickVid = new TrickVid();
 
         $form = $this->createForm(TrickCreateUpdateType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $trick->setCreatedAt(new DateTime());
+            if ($form->get('picName')->getData() != null) {
+
+                $picFile = $form['picName']->getData();
+
+                $fileName = md5(random_bytes(10)).'.'.$picFile->guessExtension();
+                try {
+                    $picFile->move(
+                        $this->getParameter('upload_directory'),
+                        $fileName
+                    );
+                } catch (FileException $exception) {
+                    //mettre exception
+                }
+
+                $trickPic
+                    ->setPicName($fileName)
+                    ->setTrick($trick);
+                $manager->persist($trickPic);
+            }
+            if ($form->get('trickVid')->getData() != null) {
+                $trickVid
+                    ->setUrl($form->get('trickVid')->getData())
+                    ->setTrick($trick);
+                $manager->persist($trickVid);
+            }
+            $currentGroup = $form->get('trickGroup')->getData();
+            $currentCategory = $currentGroup->getCategory();
+            if ($trick->getFigureGroup() != null) {
+                $currentCategory = $trick->getFigureGroup();
+            }
+            $trick
+                ->setFigureGroup($currentCategory)
+                ->setCreatedAt(new DateTime())
+                ->setAuthor($user);
 
             $manager->persist($trick);
             $manager->flush();

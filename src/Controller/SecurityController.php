@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,10 +44,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/checkit/{token}", name="token_check")
      * @param $token
-     * @param ObjectManager $manager
+     * @param EntityManagerInterface $manager
      * @return RedirectResponse|Response
      */
-    public function checkIt($token, ObjectManager $manager)
+    public function checkIt($token,EntityManagerInterface $manager)
     {
         $repo = $this->getDoctrine()->getRepository(User::class);
         $user = $repo->findOneBy(['token'=> $token]);

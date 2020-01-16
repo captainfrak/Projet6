@@ -3,7 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Trick;
+use App\Entity\TrickGroup;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,10 +18,21 @@ class TrickCreateUpdateType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('figureGroup')
-            ->add('illustration')
-            ->add('trickVideo')
-        ;
+            ->add('trickGroup', EntityType::class, [
+                'class' => TrickGroup::class,
+                'choice_label' => 'category',
+                'mapped' => false
+            ])
+            ->add('picName', FileType::class, [
+                'label' => 'Image',
+                'required' => false,
+                'mapped' =>false
+            ])
+            ->add('trickVid',TextType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

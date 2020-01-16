@@ -37,16 +37,6 @@ class Trick
     private $figureGroup;
 
     /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
-    private $illustration;
-
-    /**
-     * @ORM\Column(type="string", length=500, nullable=true)
-     */
-    private $trickVideo;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
@@ -56,9 +46,27 @@ class Trick
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $author;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickPic", mappedBy="trick",cascade={"persist"}, orphanRemoval=true)
+     */
+    private $trickPics;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TrickVid", mappedBy="trick", orphanRemoval=true)
+     */
+    private $trickVids;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->trickPics = new ArrayCollection();
+        $this->trickVids = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,30 +106,6 @@ class Trick
     public function setFigureGroup(?string $figureGroup): self
     {
         $this->figureGroup = $figureGroup;
-
-        return $this;
-    }
-
-    public function getIllustration(): ?string
-    {
-        return $this->illustration;
-    }
-
-    public function setIllustration(?string $illustration): self
-    {
-        $this->illustration = $illustration;
-
-        return $this;
-    }
-
-    public function getTrickVideo(): ?string
-    {
-        return $this->trickVideo;
-    }
-
-    public function setTrickVideo(?string $trickVideo): self
-    {
-        $this->trickVideo = $trickVideo;
 
         return $this;
     }
@@ -168,4 +152,77 @@ class Trick
 
         return $this;
     }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickPic[]
+     */
+    public function getTrickPics(): Collection
+    {
+        return $this->trickPics;
+    }
+
+    public function addTrickPic(TrickPic $trickPic): self
+    {
+        if (!$this->trickPics->contains($trickPic)) {
+            $this->trickPics[] = $trickPic;
+            $trickPic->setTrick($this);
+        }
+        return $this;
+    }
+
+    public function removeTrickPic(TrickPic $trickPic): self
+    {
+        if ($this->trickPics->contains($trickPic)) {
+            $this->trickPics->removeElement($trickPic);
+            // set the owning side to null (unless already changed)
+            if ($trickPic->getTrick() === $this) {
+                $trickPic->setTrick(null);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|TrickVid[]
+     */
+    public function getTrickVids(): Collection
+    {
+        return $this->trickVids;
+    }
+
+    public function addTrickVid(TrickVid $trickVid): self
+    {
+        if (!$this->trickVids->contains($trickVid)) {
+            $this->trickVids[] = $trickVid;
+            $trickVid->setTrick($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrickVid(TrickVid $trickVid): self
+    {
+        if ($this->trickVids->contains($trickVid)) {
+            $this->trickVids->removeElement($trickVid);
+            // set the owning side to null (unless already changed)
+            if ($trickVid->getTrick() === $this) {
+                $trickVid->setTrick(null);
+            }
+        }
+
+        return $this;
+    }
 }
+

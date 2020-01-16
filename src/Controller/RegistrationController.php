@@ -32,39 +32,59 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        $pass1 = $form->get('plainPassword')->getData();
+        $pass2 = $form->get('plainPassword2')->getData();
+
         $random = random_bytes(10);
         $token = md5($random);
 
 
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $user->setToken($token);
+            if ($pass2 === $pass1) {
+                $user->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $user,
+                        $form->get('plainPassword')->getData()
+                    )
+                );
+                $user->setToken($token);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            // do anything else you need here, like send an email
-            $email = (new Swift_Message())
-                ->setFrom('hello@example.com')
-                ->setTo('you@example.com')
-                ->setSubject('Confirmation d\'inscription')
-                ->setBody($this->renderView('email/email.html.twig', ['token' => $token]));
+                // do anything else you need here, like send an email
+                $email = (new Swift_Message())
+                    ->setFrom('hello@snowtricks.com')
+                    ->setTo($user->getEmail())
+                    ->setContentType("text/html")
+                    ->setSubject('Confirmation d\'inscription')
+                    ->setBody(
+                        $this->renderView(
+                            'email/email.html.twig',
+                            [
+                                'token' => $token,
+                                'user' => $user
+                            ]
+                        )
+                    );
 
-            $mailer->send($email);
+                $mailer->send($email);
 
-            return $this->redirectToRoute('home');
+                return $this->redirectToRoute('home');
+            }
+            return $this->render('registration/register.html.twig', [
+                'registrationForm' => $form->createView(),
+                'user' => false,
+                'notTheSame' => true
+            ]);
         }
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'user' => null
+            'user' => false,
+            'notTheSame' => false
         ]);
     }
 }

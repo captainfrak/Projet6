@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Gestion de compte - SnowTricks {% endblock %}
+
+{% block body %}
+    <style>
+        .account {
+            margin-top: 30px;
+        }
+        .section {
+            height: 80vh;
+        }
+    </style>
+<div class="section">
+    <div class="col-12 text-center">
+        <h1>Salut {{ user.username }} !!!</h1>
+    </div>
+    <div class="col-12 text-center">
+        {% if success %}
+            <div class="alert alert-success">
+            Ton mot de passe a bien été mis a jour!
+        </div>
+        {% endif %}
+        {% if newPic %}
+            <div class="alert alert-success">
+                Ta photo de profil a été mise a jour!
+            </div>
+        {% endif %}
+    </div>
+    <div class="row account">
+        <div class="col-12 text-center">
+            <h2>Mes stats</h2>
+        </div>
+        <div class="col-12 text-center">
+                <hr>
+            <div class="row">
+                <div class="col-6">nombre des commentaires postés :</div>
+                <div class="col-6">nombre des tricks postés :</div>
+                <div class="col-6">{{ user.comments | length }}</div>
+                <div class="col-6">{{ user.tricks | length  }}</div>
+            </div>
+                <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row account">
+                <div class="col-12 text-center">
+                    <h2>Image du profil</h2>
+                </div>
+                <div class="col-4">
+                    <img src="/upload/{{ user.profilePic.name }}" class="rounded-circle" style="height: 100px" alt="profile picture">
+                </div>
+                <div class="col-8">
+                    {{ form_start(uploadForm) }}
+                    {{ form_row(uploadForm.photo) }}
+                    <div class="from-group text-center">
+                        <button type="submit" class="btn btn-primary">Modifier la photo de profil</button>
+                    </div>
+                    {{ form_end(uploadForm) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row account">
+                <div class="col-12 text-center">
+                    <h2>Changer Mot de passe</h2>
+                </div>
+                <div class="col-12 text-center">
+                    <a href="{{ path('passAccount', {'username': user.username}) }}" class="btn btn-primary" style="color: white">Changer mon mot de passe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

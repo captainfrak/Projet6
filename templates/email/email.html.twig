@@ -1,8 +1,53 @@
-<!Doctype html>
+<!DOCTYPE html>
 <html>
-    <head></head>
-    <body>
-    <a href="{{ app.request.getSchemeAndHttpHost() }}/{{ token }}">Validez votre compte</a>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    {% block stylesheets %}
+        <link rel="stylesheet" href="../public/css/style.css">
+        <script src="https://kit.fontawesome.com/4b5c94a753.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+    {% endblock %}
+</head>
+<body>
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Snow Tricks</a>
+    </nav>
+{% endblock %}
+<div class="container pt-5" style="height: 80vh">
+    {% block body %}
+    <div class="row justify-content-center">
+        <div class="col-12 text-center mt-5">
+            <h1>Snowtricks</h1>
+        </div>
+        <div class="col-12 text-center mt-5">
+            <h2>Salut {{ user.username }}!</h2>
+        </div>
+    </div>
+    <div class="col-12 text-center mt-4">
+        <p>Tu viens de t'inscrire sur <a href="#">Snowtricks</a> !</p>
+        <p>Merci de cliquer sur le lien pour valider ton compte !</p>
+    </div>
+    <div class="col-12 text-center mt-4">
+        <a href="{{ path('token_check', {token: token }) }}" class="btn btn-warning">Validez votre compte</a>
+    </div>
+    {% endblock %}
+</div>
+{% block footer %}
+    <footer id="footer" style="position: relative;bottom: 5%;">
+        <div class="col text-center">
+            2019 | FrakDev
+        </div>
+    </footer>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+{% endblock %}
+</body>
 </html>
+
+
 

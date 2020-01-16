@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Trick;
 use App\Entity\User;
 use App\Form\PassAskEmailType;
 use App\Form\ResetPassType;
 use Exception;
-use phpDocumentor\Reflection\Types\This;
 use Swift_Mailer;
 use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,6 +28,10 @@ class PassChangeController extends AbstractController
     {
         $form = $this->createForm(PassAskEmailType::class);
         $form->handleRequest($request);
+        $tricks = $this->getDoctrine()->getRepository(Trick::class)->findBy([],['createdAt' => 'DESC']);
+        $user = $this->getUser();
+
+        if ($user) { return $this->redirectToRoute('home');};
 
         if ($form->isSubmitted()) {
             $em = $this->getDoctrine()->getManager();
@@ -42,16 +46,18 @@ class PassChangeController extends AbstractController
             $em->flush();
 
             $email = (new Swift_Message())
-                ->setFrom('hello@example.com')
-                ->setTo('you@example.com')
+                ->setFrom('contact@snowtricks.com')
+                ->setTo('you@snowtricks.com')
+                ->setContentType("text/html")
                 ->setSubject('Changement du mot de passe')
                 ->setBody($this->renderView('email/resetPassEmail.html.twig', ['token' => $token]));
 
             $mailer->send($email);
 
-            //TODO add field in homepage to say that email has been send + change the render beside!
-            return $this->render('/pass_change/emailask.html.twig', [
-                'askEmailForm' => $form->createView()
+            return $this->render('index.html.twig', [
+                'user' => $user,
+                'tricks' => $tricks,
+                'passchange' => true
             ]);
         }
 
