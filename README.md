@@ -21,7 +21,7 @@ Projet Php utilisant le framework Symfony.
     
    importer dans votre base de donnés le fichier 
    
-    snowtrick.???
+    snow_tricks.sql
     
    pour avoir les données initiales
    
@@ -30,3 +30,8 @@ Projet Php utilisant le framework Symfony.
    
 
 ##3 A Savoir
+
+Une version en ligne du site existe a l'adresse
+
+    projet6.sylvainsaez.fr
+    
