@@ -35,3 +35,4 @@ Une version en ligne du site existe a l'adresse
 
     projet6.sylvainsaez.fr
     
+La page d'inscription fonctionne mais l'envoi du mail de confirmation est désactivé

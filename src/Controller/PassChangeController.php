@@ -83,7 +83,6 @@ class PassChangeController extends AbstractController
 
         if ($user) {
             if ($form->isSubmitted() && $form->isValid()) {
-                //TODO Ajout second champ email pour vérif en le tapant 2fois
                 $user->setToken(null);
 
                 $user->setPassword(

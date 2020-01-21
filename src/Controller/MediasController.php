@@ -4,12 +4,10 @@ namespace App\Controller;
 
 use App\Entity\TrickPic;
 use App\Entity\TrickVid;
-use App\Form\TrickPicFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -42,7 +40,6 @@ class MediasController extends AbstractController
         $manager->flush();
 
         $this->addFlash('deletePicSuccess', 'la photo a bien été supprimée');
-        // TODO add the flash to the view
         return $this->redirectToRoute('trickupdate', ['name' => $trick] );
 
 
@@ -65,7 +62,6 @@ class MediasController extends AbstractController
         $manager->flush();
 
         $this->addFlash('deleteVicSuccess', 'la vidéo a bien été supprimée');
-        // TODO add the flash to the view
         return $this->redirectToRoute('trickupdate', ['name' => $trick] );
     }
 
